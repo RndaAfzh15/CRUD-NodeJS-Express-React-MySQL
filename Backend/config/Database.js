@@ -2,8 +2,9 @@ import {Sequelize} from "sequelize";
 
 const db = new Sequelize('crud_db', 'root','', {
     host:'localhost',
-    port:'3307',
+    port:'3306',
     dialect: 'mysql'
 });
+
 
 export default db;
