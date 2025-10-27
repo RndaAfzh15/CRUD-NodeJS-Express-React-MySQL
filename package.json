@@ -1,0 +1,11 @@
+{
+  "name": "crud-app",
+  "version": "1.0.0",
+  "description": "Fullstack CRUD app with Node.js, Express, React, MySQL",
+  "scripts": {
+    "start": "cd Backend && npm install && npm run start"
+  },
+  "engines": {
+    "node": ">=18.x"
+  }
+}
