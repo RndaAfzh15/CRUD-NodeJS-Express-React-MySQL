@@ -9,42 +9,26 @@ dotenv.config();
 const app = express();
 
 /*
-  ===== CORS CONFIG =====
+  ===== CORS (SIMPLE MODE DULU) =====
 */
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      const allowedOrigins = [
-        "https://crud-node-js-express-react-my-sql.vercel.app",
-        "http://localhost:3000",
-      ];
-
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  })
-);
+app.use(cors()); // sementara buka semua biar pastiin bukan CORS config yg salah
 
 app.use(express.json());
+
+/*
+  ===== TEST ROOT =====
+*/
+app.get("/", (req, res) => {
+  res.send("API RUNNING 🚀");
+});
 
 /*
   ===== ROUTES =====
 */
 app.use("/users", UserRoute);
 
-app.get("/", (req, res) => {
-  res.send("API RUNNING 🚀");
-});
-
 /*
-  ===== SERVER START =====
-  Server start dulu biar gak 404 kalau DB error
+  ===== START SERVER DULU =====
 */
 const PORT = process.env.PORT;
 
@@ -53,7 +37,7 @@ app.listen(PORT, "0.0.0.0", () => {
 });
 
 /*
-  ===== DATABASE CONNECT =====
+  ===== CONNECT DATABASE (BELAKANGAN) =====
 */
 (async () => {
   try {
