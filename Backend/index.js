@@ -13,13 +13,23 @@ const app = express();
 */
 app.use(
   cors({
-    origin: "https://crud-node-js-express-react-my-sql.vercel.app",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        "https://crud-node-js-express-react-my-sql.vercel.app",
+        "http://localhost:3000",
+      ];
+
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
-
-app.options("*", cors());
 
 app.use(express.json());
 
@@ -28,26 +38,27 @@ app.use(express.json());
 */
 app.use("/users", UserRoute);
 
-/*
-  ===== TEST ROUTE =====
-*/
 app.get("/", (req, res) => {
   res.send("API RUNNING 🚀");
 });
 
 /*
-  ===== DATABASE + SERVER START =====
+  ===== SERVER START =====
+  Server start dulu biar gak 404 kalau DB error
+*/
+const PORT = process.env.PORT;
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log("SERVER STARTED ON", PORT);
+});
+
+/*
+  ===== DATABASE CONNECT =====
 */
 (async () => {
   try {
     await db.authenticate();
     console.log("Database connected.");
-
-    const PORT = process.env.PORT || 5000;
-
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
   } catch (error) {
     console.error("DB connection failed:", error);
   }
