@@ -11,19 +11,21 @@ const EditUser = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    getUserById();
-  }, []);
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/users/${id}`);
+        setName(response.data.name);
+        setEmail(response.data.email);
+        setGender(response.data.gender);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-  const getUserById = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/users/${id}`);
-      setName(response.data.name);
-      setEmail(response.data.email);
-      setGender(response.data.gender);
-    } catch (error) {
-      console.error(error);
+    if (id) {
+      fetchUser();
     }
-  };
+  }, [id]);
 
   const updateUser = async (e) => {
     e.preventDefault();
@@ -51,6 +53,7 @@ const EditUser = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder='Name'
+              required
             />
           </div>
 
@@ -62,6 +65,7 @@ const EditUser = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder='Email'
+              required
             />
           </div>
 
@@ -78,7 +82,9 @@ const EditUser = () => {
             </div>
           </div>
 
-          <button type='submit' className='button is-success'>Update</button>
+          <button type='submit' className='button is-success'>
+            Update
+          </button>
         </form>
       </div>
     </div>
